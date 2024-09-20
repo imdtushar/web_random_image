@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:unsplash_client/unsplash_client.dart';
+import 'package:wifi_demo/full_image.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -107,15 +108,21 @@ class _HomeScreenState extends State<HomeScreen> {
                   expandedHeight: 200.0,
                   floating: false,
                   pinned: true,
-                  backgroundColor: Colors.amber,
+                  // backgroundColor: Colors.amber,
                   flexibleSpace: FlexibleSpaceBar(
                     title: Text(
                       _getAppBarTitle(constraints.maxWidth),
                       style: const TextStyle(fontSize: 18),
                     ),
-                    background: Image.network(
-                      'https://images.unsplash.com/photo-1726392660865-cbf2dc1459b6?q=80&w=1975&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-                      fit: BoxFit.cover,
+                    background: ClipRRect(
+                      borderRadius: const BorderRadius.only(
+                        bottomLeft: Radius.circular(40),
+                        bottomRight: Radius.circular(40),
+                      ),
+                      child: Image.network(
+                        'https://images.unsplash.com/photo-1726392660865-cbf2dc1459b6?q=80&w=1975&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+                        fit: BoxFit.cover,
+                      ),
                     ),
                   ),
                 ),
@@ -136,11 +143,26 @@ class _HomeScreenState extends State<HomeScreen> {
                           );
                         }
                         final photo = photoList[index];
-                        return ClipRRect(
-                          borderRadius: BorderRadius.circular(10),
-                          child: Image.network(
-                            photo.urls.small.toString(),
-                            fit: BoxFit.cover,
+                        return GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => FullImageView(
+                                  imageUrl: photo.urls.small.toString(),
+                                ),
+                              ),
+                            );
+                          },
+                          child: Hero(
+                            tag: "image",
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(10),
+                              child: Image.network(
+                                photo.urls.small.toString(),
+                                fit: BoxFit.cover,
+                              ),
+                            ),
                           ),
                         );
                       },
